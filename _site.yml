@@ -1,0 +1,14 @@
+name: "example-website"
+navbar: 
+  title: "This is an example!"
+  left: 
+    - text: "Home"
+      href: index.html
+    - text: "Analysis"
+      href: analysis.html
+  right: 
+    - icon: fa-heart
+      href: https://github.com/elliegr
+output:
+  html_document:
+    theme: flatly
