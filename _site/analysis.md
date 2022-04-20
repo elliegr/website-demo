@@ -58,12 +58,12 @@ nhefs %>%
   add_overall()
 ```
 
-<div id="qdwdgavsbd" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="doquxzijmt" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#qdwdgavsbd .gt_table {
+#doquxzijmt .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -88,7 +88,7 @@ nhefs %>%
   border-left-color: #D3D3D3;
 }
 
-#qdwdgavsbd .gt_heading {
+#doquxzijmt .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -100,7 +100,7 @@ nhefs %>%
   border-right-color: #D3D3D3;
 }
 
-#qdwdgavsbd .gt_title {
+#doquxzijmt .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -112,7 +112,7 @@ nhefs %>%
   border-bottom-width: 0;
 }
 
-#qdwdgavsbd .gt_subtitle {
+#doquxzijmt .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -124,13 +124,13 @@ nhefs %>%
   border-top-width: 0;
 }
 
-#qdwdgavsbd .gt_bottom_border {
+#doquxzijmt .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#qdwdgavsbd .gt_col_headings {
+#doquxzijmt .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -145,7 +145,7 @@ nhefs %>%
   border-right-color: #D3D3D3;
 }
 
-#qdwdgavsbd .gt_col_heading {
+#doquxzijmt .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -165,7 +165,7 @@ nhefs %>%
   overflow-x: hidden;
 }
 
-#qdwdgavsbd .gt_column_spanner_outer {
+#doquxzijmt .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -177,15 +177,15 @@ nhefs %>%
   padding-right: 4px;
 }
 
-#qdwdgavsbd .gt_column_spanner_outer:first-child {
+#doquxzijmt .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#qdwdgavsbd .gt_column_spanner_outer:last-child {
+#doquxzijmt .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#qdwdgavsbd .gt_column_spanner {
+#doquxzijmt .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -197,7 +197,7 @@ nhefs %>%
   width: 100%;
 }
 
-#qdwdgavsbd .gt_group_heading {
+#doquxzijmt .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -222,7 +222,7 @@ nhefs %>%
   vertical-align: middle;
 }
 
-#qdwdgavsbd .gt_empty_group_heading {
+#doquxzijmt .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -237,15 +237,15 @@ nhefs %>%
   vertical-align: middle;
 }
 
-#qdwdgavsbd .gt_from_md > :first-child {
+#doquxzijmt .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#qdwdgavsbd .gt_from_md > :last-child {
+#doquxzijmt .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#qdwdgavsbd .gt_row {
+#doquxzijmt .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -264,7 +264,7 @@ nhefs %>%
   overflow-x: hidden;
 }
 
-#qdwdgavsbd .gt_stub {
+#doquxzijmt .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -277,7 +277,7 @@ nhefs %>%
   padding-right: 5px;
 }
 
-#qdwdgavsbd .gt_stub_row_group {
+#doquxzijmt .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -291,11 +291,11 @@ nhefs %>%
   vertical-align: top;
 }
 
-#qdwdgavsbd .gt_row_group_first td {
+#doquxzijmt .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#qdwdgavsbd .gt_summary_row {
+#doquxzijmt .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -305,16 +305,16 @@ nhefs %>%
   padding-right: 5px;
 }
 
-#qdwdgavsbd .gt_first_summary_row {
+#doquxzijmt .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#qdwdgavsbd .gt_first_summary_row.thick {
+#doquxzijmt .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#qdwdgavsbd .gt_last_summary_row {
+#doquxzijmt .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -324,7 +324,7 @@ nhefs %>%
   border-bottom-color: #D3D3D3;
 }
 
-#qdwdgavsbd .gt_grand_summary_row {
+#doquxzijmt .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -334,7 +334,7 @@ nhefs %>%
   padding-right: 5px;
 }
 
-#qdwdgavsbd .gt_first_grand_summary_row {
+#doquxzijmt .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -344,11 +344,11 @@ nhefs %>%
   border-top-color: #D3D3D3;
 }
 
-#qdwdgavsbd .gt_striped {
+#doquxzijmt .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#qdwdgavsbd .gt_table_body {
+#doquxzijmt .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -357,7 +357,7 @@ nhefs %>%
   border-bottom-color: #D3D3D3;
 }
 
-#qdwdgavsbd .gt_footnotes {
+#doquxzijmt .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -371,7 +371,7 @@ nhefs %>%
   border-right-color: #D3D3D3;
 }
 
-#qdwdgavsbd .gt_footnote {
+#doquxzijmt .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-left: 4px;
@@ -380,7 +380,7 @@ nhefs %>%
   padding-right: 5px;
 }
 
-#qdwdgavsbd .gt_sourcenotes {
+#doquxzijmt .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -394,7 +394,7 @@ nhefs %>%
   border-right-color: #D3D3D3;
 }
 
-#qdwdgavsbd .gt_sourcenote {
+#doquxzijmt .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -402,60 +402,60 @@ nhefs %>%
   padding-right: 5px;
 }
 
-#qdwdgavsbd .gt_left {
+#doquxzijmt .gt_left {
   text-align: left;
 }
 
-#qdwdgavsbd .gt_center {
+#doquxzijmt .gt_center {
   text-align: center;
 }
 
-#qdwdgavsbd .gt_right {
+#doquxzijmt .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#qdwdgavsbd .gt_font_normal {
+#doquxzijmt .gt_font_normal {
   font-weight: normal;
 }
 
-#qdwdgavsbd .gt_font_bold {
+#doquxzijmt .gt_font_bold {
   font-weight: bold;
 }
 
-#qdwdgavsbd .gt_font_italic {
+#doquxzijmt .gt_font_italic {
   font-style: italic;
 }
 
-#qdwdgavsbd .gt_super {
+#doquxzijmt .gt_super {
   font-size: 65%;
 }
 
-#qdwdgavsbd .gt_footnote_marks {
+#doquxzijmt .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
   font-size: 75%;
   vertical-align: 0.4em;
 }
 
-#qdwdgavsbd .gt_asterisk {
+#doquxzijmt .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#qdwdgavsbd .gt_slash_mark {
+#doquxzijmt .gt_slash_mark {
   font-size: 0.7em;
   line-height: 0.7em;
   vertical-align: 0.15em;
 }
 
-#qdwdgavsbd .gt_fraction_numerator {
+#doquxzijmt .gt_fraction_numerator {
   font-size: 0.6em;
   line-height: 0.6em;
   vertical-align: 0.45em;
 }
 
-#qdwdgavsbd .gt_fraction_denominator {
+#doquxzijmt .gt_fraction_denominator {
   font-size: 0.6em;
   line-height: 0.6em;
   vertical-align: -0.05em;
@@ -878,10 +878,10 @@ ATE <- complete_data %>%
     ## # A tibble: 1 × 1
     ##   `(sum(qsmk * wt82 * w_ate) / sum(qsmk * w_ate)) - ...`
     ##                                                    <dbl>
-    ## 1                                                   3.98
+    ## 1                                                   3.96
 
-We see that our estimated ATE is 3.98. This means that if someone quit
-smoking between 1971-1982, then they weighed approximately 3.98 kg more
+We see that our estimated ATE is 3.96. This means that if someone quit
+smoking between 1971-1982, then they weighed approximately 3.96 kg more
 than someone who did not quit smoking. This does give us insight as to
 the causal relationship between quitting smoking and weight, but we will
 calculate uncertainty estimates and bootstrapped intervals in order to
@@ -922,17 +922,17 @@ quantile(estimates$estimate, probs = c(0.025, 0.975))
 ```
 
     ##     2.5%    97.5% 
-    ## 2.272397 5.710658
+    ## 2.065178 5.607730
 
 ``` r
 quantile(estimates$std_error, probs = c(0.025, 0.975))
 ```
 
     ##      2.5%     97.5% 
-    ## 0.7876128 0.8699975
+    ## 0.7832907 0.8674608
 
 From the code above, we can see that a 95% confidence interval for our
-ATE estimate is (2.272, 5.711) with standard error (0.788, 0.87).
+ATE estimate is (2.065, 5.608) with standard error (0.783, 0.867).
 
 ## Sensitivity Analysis
 
