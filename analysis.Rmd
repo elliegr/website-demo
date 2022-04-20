@@ -1,219 +1,170 @@
 ---
-title: "Lab 04 - Whole Game"
+title: "Lab 03 - Using Propensity Scores"
 output: github_document
-author: "Ellie Grace Moore"
+author: "Ellie Grace"
 date: '2022-03-29'
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.align = 'center')
-library(causaldata)
-library(gtsummary)
-library(broom)
-library(mice)
+
+```{r, message = FALSE, warning = FALSE}
+library(tidyverse)
 library(smd)
 library(cli)
-library(survey)
-library(tidyverse)
-library(MatchThem)
-library(rsample)
+library(gtsummary)
 library(ggdag)
-library(visdat)
+library(survey)
 library(dagitty)
-library(tipr)
+library(broom)
 ```
 
-```{r, include = FALSE}
-nhefs <- nhefs %>% 
-  filter(censored == 0)
+## Exercise 1
+
+```{r}
+coffee <- read.csv("coffee_town_df.csv")
+
+coffee %>% count(coffee_town)
 ```
+For this data set we have 1100 observations with coffee_town as our exposure. There are 987 in the unexposed group (those who do not live in coffee town) and 113 in the exposed group (those who do live in coffee town). The outcome is the cups_of_coffee and the other variables are job, smoke, and age. Job is categorical and ranks the jobs level of difficulty as either easy, hard, or none. Smoke is also a categorical variable with categories never, former, or current. There is no missing data.
 
+## Exercise 2
 
-## The Causal Question
-
-We are working with the `nhefs` (National Health and Nutrition Examination Survey) data set which contains 1629 observations of 67 variables. The variables in this dataset mostly relate to an individual's health with a few involving tobacco prices and tax. We are interested in the effect of quitting smoking on ones weight. More specifically: **with ones weight in 1971 as the starting point, does quitting smoking between the years 1971-1982 influence ones weight in 1982?** For this question, we are interested in estimating the average treatment effect for the overall population. The variables we are particularly interested in are:
-
-* **wt71**: weight in kilograms in 1971
-* **age**: age in 1971
-* **sex**: 0: male with 1: female
-* **smokeyrs**: years of smoking
-* **exercise**:  In recreation, how much do you exercise? In 1971, 0:much exercise, 1:moderate exercise, 2:little or no exercise
-* **alcoholfreq**: How often do you drink? In 1971  0: Almost every day, 1: 2-3 times/week, 2: 1-4 times/month, 3: < 12 times/year, 4: No alcohol last year, 5: Unknown
-* **ht**: heigh in cm in 1971
-* **income**: Total family income in 1971  11:<$1000, 12: 1000-1999, 13: 2000-2999, 14: 3000-3999, 15: 4000-4999, 16: 5000-5999, 17: 6000-6999, 18: 7000-9999, 19: 10000-14999, 20: 15000-19999, 21: 20000-24999, 22: 25000+
-* **marital**: Marital status in 1971  1: Under 17, 2: Married, 3: Widowed, 4: Never married, 5: Divorced, 6: Separated, 8: Unknown
-* **qsmk** (exposure): quit smoking between 1st questionnaire and 1982, 1: Yes, 0: No
-* **wt82** (outcome): weight in kilograms in 1982
-
-We start by making a table that shows more about how each of our variables are distributed.
-
-```{r fig.align='center'}
-nhefs %>%
+```{r}
+coffee %>%
   tbl_summary(
-    by = qsmk, 
-    include = c( 
-                "wt71",
+    by = coffee_town, 
+    include = c( #Vector of adjustment variables
+                "cups_of_coffee",
                 "age",
-                "sex",
-                "smokeyrs",
-                "exercise",
-                "alcoholfreq",
-                "ht",
-                "income",
-                "marital",
-                "qsmk",
-                "wt82")) %>%
+                "job",
+                "smoke")) %>%
   add_overall()
 ```
 
-## Missing Data
+From this table, we are able to get a better idea of how the data is distributed. For example, it is more common for those who do not live in coffee town to drink 1-3 cups of coffee than those who do live in coffee town. We can also notice that 0% of people who do not live in coffee town drink 5-6 cups of coffee whereas 3.5% and .9% of people who live in coffee town drink 5 and 6 cups of coffee. We can also notice that coffee town has a higher median age and it looks like the ages have a higher range (although skewed on the older side) than the ages of those who do not live in coffee town. Looking at the job section, we can see that coffee town has a higher unemployment rate whereas those who do not live in coffee town tend to have easier jobs. Lastly, the smoking categories between the exposure groups appear to be relatively similar. Majority of people in both places have never smoked, although there are more current smokers not living in coffee town. 
 
-Before we can begin our causal assessment, we must investigate any missing data. To do this, we create a plot that helps us visualize any missing data:
+## Exercise 3
 
-```{r, fig.align='center'}
-nhefs %>% 
-  select(sex, age, smokeyrs, wt71, wt82, marital, ht, alcoholfreq, exercise, income) %>% vis_dat(palette = "cb_safe") +
-  ggtitle("Visualizing Missing Data")
-```
-
-It appears that the only variables that has missing values is income. With this being said, we will conduct a predictive mean matching imputation method in order to impute these missing values. We also recreate the above plot to ensure that there are no longer missing data.
-
-```{r, fig.align='center'}
-nhefs_imp <- mice(nhefs, m = 1, method = "pmm", printFlag = FALSE) #single imputation
-complete_data <- complete(nhefs_imp)
-
-complete_data %>% 
-   select(sex, age, smokeyrs, wt71, wt82, marital, ht, alcoholfreq, exercise, income) %>% vis_dat(palette = "cb_safe") + 
-  ggtitle("Visualizing Missing Data", subtitle = "(There is none!)")
-```
-
-## Proposed DAG
-
-We now have a complete dataset. To begin, we specify relationships for our exposure and outcome along with the other variables. Our proposed DAG is below.
-
-```{r dag, fig.align='center'}
-dag <- dagify(
-wt82 ~ wt71 + sex + age + exercise + ht + alcoholfreq + income,
-qsmk ~ age + sex + smokeyrs + alcoholfreq + exercise + marital + income, 
-  exposure = "qsmk", 
-  outcome = "wt82"
-) 
-dag %>%
-  ggdag() + 
-  geom_dag_node(color = "plum4") + 
-  geom_dag_text(color = "black") +
-  theme_dag() 
-```
-
-To prevent confounders, we need to close the backdoor paths on our DAG. To do this, we establish the adjustment set and adjust for those specified variables. 
-
-```{r, fig.align='center'}
-dag %>%
-  ggdag_adjustment_set(stylized = TRUE) +
-  geom_dag_text(color = "black") +
-  scale_color_manual(values = c("deeppink2", "plum4")) +
-  theme_minimal()
-```
-
-From the figure above, we can see that we need to adjust for age, alcoholfreq, exercise, income, and sex. These will therefore be the variables we include in our propensity score model.
-
-## Propensity Score Model
-
-We adjust for the above-listed variables by using a binomial model for our propensity scores. After specifying our model, we create a mirrored histogram of the calculatede propensity scores for both quitting and not quitting smoking.
-
-```{r, fig.align='center'}
-complete_data <- 
-  glm(qsmk ~ age + sex + income + exercise + alcoholfreq,
-    data = complete_data,
+```{r}
+coffee <- 
+  glm(coffee_town ~ age + smoke + job,
+    data = coffee,
     family = binomial()) %>%
-  augment(type.predict = "response", data = complete_data) 
+  augment(type.predict = "response", data = coffee) 
 
-df_plot_ps <- complete_data %>%
-  tidyr::pivot_wider(names_from = qsmk, 
+df_plot_ps <- coffee %>%
+  tidyr::pivot_wider(names_from = coffee_town, 
                      values_from = .fitted, 
-                     names_prefix = "qsmk_p")
+                     names_prefix = "coffee_town_p")
 
 ggplot(df_plot_ps) +
   geom_histogram(bins = 50, 
-                 aes(x = qsmk_p1), 
+                 aes(x = coffee_town_p1), 
                  fill = "deeppink2") + 
   geom_histogram(bins = 50, 
-                 aes(x = qsmk_p0, 
+                 aes(x = coffee_town_p0, 
                      y = - stat(count)), 
                  fill = "plum4") + 
   
   scale_y_continuous("count", label = abs) + 
   scale_x_continuous("propensity score") +
   annotate(geom = "label",
-           x = 0.25,
-           y= 5,
-           label = "Quit Smoking") + 
+           x = 0.6,
+           y= 20,
+           label = "Lives in Coffee Town") + 
 annotate(geom = "label",
-         x = 0.25,
-         y = -5,
-         label  = "Didn't Quit Smoking") +
-  ggtitle("Distribution of Unweighted Propensity Scores") +
+         x = 0.5,
+         y = -40,
+         label  = "Doesn't Live in Coffee Town") +
+  ggtitle("Distribution of Propensity Scores")
   theme_minimal()
 ```
-The first observation we can make is that most people did not quit smoking. Also, we notice that those who did not quit smoking all had a relatively low probability for quitting, so the model did a good job here. However, for those who did quit smoking, there is more of a range of probabilities with a huddle around 0.2-0.3 range. We will now create a *weighted* mirrored histogram using weights for the average treatment effect.
 
-```{r, fig.align='center'}
-complete_data <- complete_data %>%
+We see that our model did a good job for those who do not live in coffee town (since they all have low probabilities of living in coffee town), but it is a little more scattered for coffee town. We see for the coffee town side of the histogram there are some with low probabilities of living there, some with probabilities around .3, and few with high probabilities of living there. This could perhaps be due to the small number of observations in the exposed group.
+
+## Exercise 4
+
+```{r}
+coffee <- coffee %>%
   mutate( 
-    w_ate = qsmk / .fitted + 
-      (1 - qsmk) / (1 - .fitted)
+    w_ato = (1-.fitted) * coffee_town + .fitted * (1-coffee_town)
   )
 
-df_plot_ps <- complete_data %>%
-  tidyr::pivot_wider(names_from = qsmk, 
+df_plot_ps <- coffee %>%
+  tidyr::pivot_wider(names_from = coffee_town, 
                      values_from = .fitted, 
-                     names_prefix = "qsmk_p")
+                     names_prefix = "coffee_town_p")
+```
 
+The causal estimand we will be estimating is the average treatment effect among the overlap. 
+
+## Exercise 5
+
+```{r}
+svy_des <- svydesign(
+  ids = ~ 1,
+  data = coffee,
+  weights = ~ w_ato
+)
+
+svy_des %>%
+  tbl_svysummary(by = coffee_town,
+              include = c("age", 
+      "job",
+      "smoke",
+      "cups_of_coffee")) %>%
+  add_overall()
+```
+
+We can first notice that we have a much smaller amount of people now compared to our unweighted table. Then, none of the columns directly match the overall, exposed, or unexposed group (which is expected since we are looking at the overlap population). Although the job and smoking sections are closest to the unweighted exposed group. Lastly, the patterns of the cups of coffee section roughly match the same patterns found in the unweighted table. 
+
+## Exercise 6
+
+```{r}
 ggplot(df_plot_ps) +
-  geom_histogram(bins = 50,
-                 aes(x = qsmk_p1), 
+  geom_histogram(bins = 50, 
+                 alpha = 0.5,
+                 aes(x = coffee_town_p1), 
                  fill = "deeppink2") + 
   geom_histogram(bins = 50, 
-                 aes(x = qsmk_p1,
-                     weight = w_ate), 
-                 fill = "deeppink2",
-                 alpha = 0.5) +
-
+                 aes(x = coffee_town_p1,  # Treatment arm
+                     weight = w_ato), 
+                 fill = "deeppink2") +
+#Control arm
   geom_histogram(bins = 50, 
-                 aes(x = qsmk_p0, 
+                 aes(x = coffee_town_p0, 
                      y = - stat(count)),
-                 fill = "plum4") + 
-  geom_histogram(bins = 50,
-                 aes(x = qsmk_p0, 
-                     weight = w_ate, 
-                     y = - stat(count)), 
                  fill = "plum4",
                  alpha = 0.5) + 
+  geom_histogram(bins = 50,
+                 aes(x = coffee_town_p0, 
+                     weight = w_ato, 
+                     y = - stat(count)), 
+                 fill = "plum4") + 
   
   scale_y_continuous("Count", label = abs) + 
   scale_x_continuous("Propensity Score") +
   annotate(geom = "label",
-           x = 0.25,
-           y= 5,
-           label = "Quit Smoking") +
+           x = 0.5,
+           y= 20,
+           label = "Lives in Coffee Town") +
 annotate(geom = "label",
          x = 0.25,
-         y = -10,
-         label  = "Didn't Quit Smoking") + 
+         y = -40,
+         label  = "Doesn't Live in Coffee Town") + 
   ggtitle("Distribution of Weighted/Unweighted Propensity Scores") + 
   theme_minimal()
 ```
 
-### Checking the Model
+For this histogram, since we are using the overlap weight, an observation will get penalized more if they are in the group they are suspected to be in. But if an observation is in a "nonintuitive location"--i.e. those who have a low probability of living in coffee town but do--then they will not be penalized as much seeing as they are most likely in the overlap population. 
 
-We will now look at scaled mean differences (smd's) and empirical CDF's in order to determine if we need to reiterate our model with any polynomial or spline terms. We begin by looking at a love plot that shows the smd's for each variable.
+## Exercise 7
 
-```{r, fig.align='center'}
-smds <- complete_data %>%
+```{r}
+smds <- coffee %>%
   summarize(
-    across(c(age, sex, exercise, alcoholfreq, income),
-           list(unweighted = ~smd(.x, qsmk)$estimate,
-                ate.weighted = ~smd(.x, qsmk, w = w_ate)$estimate))
+    across(c(age, job, smoke),
+           list(unweighted = ~smd(.x, coffee_town)$estimate,
+                ato.weighted = ~smd(.x, coffee_town, w = w_ato)$estimate))
   )
 
 plot_df <- smds %>%
@@ -235,19 +186,20 @@ ggplot(
   geom_point() + 
   geom_vline(xintercept = 0.1, 
              color = "black", size = 0.1) +
-  ggtitle("Love Plot for Sex, Age, Income, and Job") + 
-  scale_color_manual(values = c("deeppink2", "plum4")) + 
+  ggtitle("Love Plot for Smoke, Age, and Job") + 
   theme_minimal()
 ```
 
-According to this plot, changes to our propensity score model are not necessary since each scaled mean difference is below the specified value of 0.1. Next we look at an unweighted eCDF for age (since it is the only continuous variable).
+For the unweighted smd's, we are able to see that both smoke and age have a higher value than we would like, and job has a much higher value than we would like. Now for the ATO weighted smd's, we are able to see that our weights balanced on the mean and now are perfectly centered at zero. 
+
+## Exercise 8
 
 ```{r}
-ggplot(complete_data, 
-       aes(x = age, group = qsmk, 
-           color = factor(qsmk))) +
+ggplot(coffee, 
+       aes(x = age, group = coffee_town, 
+           color = factor(coffee_town))) +
   stat_ecdf() +
-  scale_color_manual("Quit smoking", 
+  scale_color_manual("Lives in Coffee Town", 
                      values = c("plum4", "deeppink2"),
                      labels = c("No", "Yes")) + 
   scale_x_continuous("Age") + 
@@ -255,20 +207,18 @@ ggplot(complete_data,
   ggtitle("Unweighted eCDF for Age") +
   theme_minimal()
 ```
-
-This eCDF is not bad, however the distributions could line up better in the middle. Let us now create a **weighted** eCDF (again, with our ATE weights) to see if we can get these to line up better.
-
+We already knew that coffee town had a wider range of ages, but now we can see that coffee town has only young people and old people whereas the ages of those who do not live in coffee town appear more evenly distributed. 
 
 ```{r}
-ecdf_1 <- complete_data %>%
-  filter(qsmk == 1) %>%
+ecdf_1 <- coffee %>%
+  filter(coffee_town == 1) %>%
   arrange(age) %>%
-  mutate(cum_pct = cumsum(w_ate) / sum(w_ate))
+  mutate(cum_pct = cumsum(w_ato) / sum(w_ato))
 
-ecdf_0 <- complete_data %>%
-  filter(qsmk == 0) %>%
+ecdf_0 <- coffee %>%
+  filter(coffee_town == 0) %>%
   arrange(age) %>%
-  mutate(cum_pct = cumsum(w_ate) / sum(w_ate))
+  mutate(cum_pct = cumsum(w_ato) / sum(w_ato))
 
 ggplot(ecdf_1, aes(x = age, y = cum_pct)) +
   geom_line(color = "deeppink2") +
@@ -277,83 +227,157 @@ ggplot(ecdf_1, aes(x = age, y = cum_pct)) +
             color = "plum4") + 
   xlab("Age") + 
   ylab("Proportion <= x") + 
-  ggtitle("Age after ATE Weighting") +
+  ggtitle("Age after ATO Weighting") +
 annotate(geom = "label",
-         x = 45,
-         y = 0.8,
+         x = 30,
+         y = 0.05,
          color = "plum4",
-         label = "Didn't Quit Smoking") +
+         label = "Doesn't Live in Coffee Town") +
 annotate(geom = "label",
-         x = 33,
-         y = 0.4,
+         x = 20,
+         y = 0.45,
          color = "deeppink2",
-         label = "Quit Smoking") +
+         label = "Lives in Coffee Town") +
   theme_minimal()
 ```
+After ATO weighting, the distributions match a little more closely, but still do not line up well.
 
-This weighted eCDF looks much better! After looking at the love plot and weighted eCDF, we can conclude that we do not need to iterate our propensity score model.
+## Exercise 9
 
-## The Effect
-
-```{r}
-ATE <- complete_data %>% 
-  summarise((sum(qsmk*wt82*w_ate)/sum(qsmk*w_ate))-(sum((1-qsmk)*wt82*w_ate)/sum((1-qsmk)*w_ate))); ATE
-```
-We see that our estimated ATE is `r round(ATE, 2)`. This means that if someone quit smoking between 1971-1982, then they weighed approximately  `r round(ATE, 2)` kg more than someone who did not quit smoking. This does give us insight as to the causal relationship between quitting smoking and weight, but we will calculate uncertainty estimates and bootstrapped intervals in order to get an even better idea on the causal effect. 
-
-### Uncertainty Estimates
+We will now iterate our propensity score model and fit age with a natural spline. Hopefully doing this will result in a better looking eCDF!
 
 ```{r}
-bootstrap <- bootstraps(complete_data, 1000, apparent = TRUE) %>%
-  mutate(df = map(splits, analysis))
+coffee_2 <- glm(coffee_town ~ job + smoke +
+      splines::ns(age, 3),
+    family = binomial(),
+    data = coffee) %>%
+  augment(data = coffee, type.predict = "response") 
 
-fit_ipw <- function(split, ...) {
-  .df <- analysis(split)
-  # fit propensity score model
-  propensity_model <- glm(
-    qsmk ~ age + exercise + income + sex + alcoholfreq,
-    family = binomial(), 
-    data = .df
+coffee_2 <- coffee_2 %>%
+  mutate( 
+    w_ato = (1-.fitted) * coffee_town + .fitted * (1-coffee_town)
   )
-  # calculate inverse probability weights
-  .df <- propensity_model %>% 
-    augment(type.predict = "response", data = .df) %>% 
-    mutate(wts = qsmk / .fitted + (1 - qsmk) / (1  - .fitted)) 
-  # fit correctly bootsrapped ipw model
-  lm(wt82 ~ qsmk, data = .df, weights = wts) %>% 
-    tidy()
-}
-
-estimate <- array()
-std_error <- array()
-for (i in 1:1000) {
-    estimate[i] = fit_ipw(bootstrap$splits[[i]])[2,] %>% pull("estimate")
-    std_error[i] = fit_ipw(bootstrap$splits[[i]])[2,] %>% pull("std.error")
-}
-
-estimates <- data.frame(estimate, std_error)
-quantile(estimates$estimate, probs = c(0.025, 0.975))
-quantile(estimates$std_error, probs = c(0.025, 0.975))
 ```
 
-From the code above, we can see that a 95% confidence interval for our ATE estimate is (`r round(quantile(estimates$estimate, probs = c(0.025, 0.975)), 3)`) with standard error (`r round(quantile(estimates$std_error, probs = c(0.025, 0.975)),3)`).
-
-## Sensitivity Analysis
-
 ```{r}
-smd <- c(.1, .15, .2, .25, .3, .35, .4, .45, .5, .55, .6, .65, .7, .75, .8, .85, .9, .95, 1)
-adjust_coef(effect = 3.88,
-            smd = smd,
-            outcome_association = 3.88 / smd,
-            verbose = FALSE) %>%
-  ggplot(aes(x = smd, y = outcome_association)) +
-  geom_line(color = "plum4") +
-  geom_point(color = "plum4") +
+df_plot_ps <- coffee_2 %>%
+  tidyr::pivot_wider(names_from = coffee_town, 
+                     values_from = .fitted, 
+                     names_prefix = "coffee_town_p")
+
+ggplot(df_plot_ps) +
+  geom_histogram(bins = 50, 
+                 aes(x = coffee_town_p1), 
+                 fill = "deeppink2") + 
+  geom_histogram(bins = 50, 
+                 alpha = 0.5, 
+                 aes(x = coffee_town_p1,  # Treatment arm
+                     weight = w_ato), 
+                 fill = "deeppink2") +
+#Control arm
+  geom_histogram(bins = 50, 
+                 aes(x = coffee_town_p0, 
+                     y = - stat(count)),
+                 fill = "plum4",
+                 alpha = 0.5) + 
+  geom_histogram(bins = 50,
+                 aes(x = coffee_town_p0, 
+                     weight = w_ato, 
+                     y = - stat(count)), 
+                 fill = "plum4") + 
+  
+  scale_y_continuous("Count", label = abs) + 
+  scale_x_continuous("Propensity Score") +
+  annotate(geom = "label",
+           x = 0.75,
+           y= 60,
+           label = "Lives in Coffee Town") +
+annotate(geom = "label",
+         x = 0.5,
+         y = -60,
+         label  = "Doesn't Live in Coffee Town") + 
+  ggtitle("Weighted Propensity Scores after Iterating") + 
   theme_minimal()
 ```
 
+Since our model is getting better at predicting the propensity scores, all of our ATO weights will go to zero since more observations are in the groups we predict them to be. 
+
+  
 ```{r}
-tip_lm(effect = 3.88,
-        smd = 0.5)
+smds <- coffee_2 %>%
+  summarize(
+    across(c(age, job, smoke),
+           list(unweighted = ~smd(.x, coffee_town)$estimate,
+                ato.weighted = ~smd(.x, coffee_town, w = w_ato)$estimate))
+  )
+
+plot_df <- smds %>%
+  pivot_longer(
+    everything(),
+    values_to = "SMD",
+    names_to = c("Variable", "Method"),
+    names_pattern = "(.*)_(.*)"
+  ) %>%
+  arrange(Method, abs(SMD)) %>%
+  mutate(Variable = fct_inorder(Variable))
+
+ggplot(
+  data = plot_df,
+  aes(x = abs(SMD), y = Variable, 
+      group = Method, color = Method)
+) +  
+  geom_line(orientation = "y") +
+  geom_point() + 
+  geom_vline(xintercept = 0.1, 
+             color = "black", size = 0.1) +
+  theme_minimal()
 ```
 
+We do not see a change in the Love plot, but that is to be expected since our smd's aren't changing.
+
+
+```{r}
+ecdf_1 <- coffee_2 %>%
+  filter(coffee_town == 1) %>%
+  arrange(age) %>%
+  mutate(cum_pct = cumsum(w_ato) / sum(w_ato))
+
+ecdf_0 <- coffee_2 %>%
+  filter(coffee_town == 0) %>%
+  arrange(age) %>%
+  mutate(cum_pct = cumsum(w_ato) / sum(w_ato))
+
+ggplot(ecdf_1, aes(x = age, y = cum_pct)) +
+  geom_line(color = "deeppink2") +
+  geom_line(data = ecdf_0, 
+            aes(x = age, y = cum_pct), 
+            color = "plum4") + 
+  xlab("Age") + 
+  ylab("Proportion <= x") + 
+  ggtitle("Age after ATO Weighting") +
+  annotate(geom = "label",
+         x = 23,
+         y = .64,
+         label  = "Lives in Coffee Town",
+         color = "deeppink2") + 
+  annotate(geom = "label",
+           x = 29, 
+           y = .5,
+           label = "Doesn't Live in Coffee Town",
+           color = "plum4") + 
+  theme_minimal()
+```
+
+This eCDF looks much better than the last ones! We see that the distributions are now very closely matched after iterating our propensity score model. We are satisfied with these plots.
+
+## Exercise 10
+
+```{r}
+coffee_2 %>% 
+  summarise((sum(coffee_town*cups_of_coffee*w_ato)/sum(coffee_town*w_ato))-(sum((1-coffee_town)*cups_of_coffee*w_ato)/sum((1-coffee_town)*w_ato)))
+```
+Since the average causal effect is practically zero, this means that among the overlap population, those who live in coffee town do not consume any more cups of coffee than those who do not. 
+
+## Bonus
+
+In order to get an idea of the uncertainty of the average causal effect, we could create a bootstrapped confidence interval. A regular confidence interval won't work since there will be issues with the standard errors being either too large or too small. 
