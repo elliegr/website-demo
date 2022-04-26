@@ -1,0 +1,19 @@
+---
+title: "Missing Data"
+author: "Ellie Grace Moore"
+date: "4/14/2022"
+output: 
+github_document:
+  df_print: kable
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(faraway)
+library(visdat)
+```
+
+```{r}
+vis_dat(nhefs)
+```
+

@@ -11,7 +11,7 @@
 
 
 
-<title>Example Website</title>
+<title>_index</title>
 
 <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -32,8 +32,6 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -243,74 +241,17 @@ $(document).ready(function () {
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Data Visualization
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="data viz/Bubble-Plots.html">Bubble Plots</a>
-    </li>
-    <li class="dropdown-header">Visualizing Distributions</li>
-    <li class="dropdown-header">3D Scatterplots</li>
-  </ul>
+        <li>
+  <a href="index.html">Home</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Regression
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Linear</li>
-    <li class="dropdown-header">General</li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Statistical Learning
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="lab-02-propensity-scores.html">Cross Validation</a>
-    </li>
-    <li class="dropdown-header">Decision Trees</li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Causal Inference
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="lab-02-propensity-scores.html">1</a>
-    </li>
-    <li class="dropdown-header">Decision Trees</li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Tidy Data
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="lab-02-propensity-scores.html">Mushrooms</a>
-    </li>
-  </ul>
+<li>
+  <a href="analysis/analysis.html">Data Visualization</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/elliegr">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -323,20 +264,11 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Example Website</h1>
 
 </div>
 
 
-<p>This is markdown</p>
-<ul>
-<li>I can include bullets</li>
-</ul>
-<div id="i-can-include-headers" class="section level2">
-<h2>I can include headers</h2>
-<p>&lt;img src = "img/img.jpg&gt;</p>
-<p>I can include <i> html</i></p>
-</div>
+<p>name: “example-website” navbar: title: “This is an example!” left: - text: “Home” href: index.html - text: “Data Visualization” href: analysis.html right: - icon: fa-github href: <a href="https://github.com/elliegr" class="uri">https://github.com/elliegr</a> output: html_document: theme: flatly output_dir: “.”</p>
 
 
 

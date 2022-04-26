@@ -2,14 +2,40 @@ name: "example-website"
 navbar: 
   title: "This is an example!"
   left: 
-    - text: "Home"
-      href: index.html
-    - text: "Analysis"
-      href: analysis.html
+    - text: "Data Visualization"
+      menu:
+        - text: "Bubble Plots"
+          href: data viz/Bubble-Plots.html
+        - text: "Visualizing Distributions"
+          href:
+        - text: "3D Scatterplots"
+          href:
+    - text: "Regression"
+      menu:
+        - text: "Linear"
+          href: 
+        - text: "General"
+          href:
+    - text: Statistical Learning
+      menu:
+        - text: "Cross Validation"
+          href: "lab-02-propensity-scores.html"
+        - text: "Decision Trees"
+          href: 
+    - text: Causal Inference
+      menu:
+        - text: "1"
+          href: "lab-02-propensity-scores.html"
+        - text: "Decision Trees"
+          href: 
+    - text: Tidy Data
+      menu:
+        - text: "Mushrooms"
+          href: "lab-02-propensity-scores.html"
   right: 
-    - icon: fa-heart
+    - icon: fa-github fa-lg
       href: https://github.com/elliegr
 output:
   html_document:
     theme: flatly
-output_dir: "."
+output_dir: "."    

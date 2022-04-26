@@ -1,0 +1,102 @@
+College,US World and News Ranking,TuitionState,TuitionOutState,TotalEnroll,Fall14Accep,Private,Selective,Setting,Endowment,FRR,Fewer20,4YrGradRate,Fraternity,Sorority,Athletics,PercentAid
+Princeton University,1,43450,43450,8088,7.4,Private,y,Suburban,20576361000,98.3,71.8,90,0,0,1,58.8
+Harvard University,2,45278,45278,19929,6,Private,y,Urban,36429256000,97,74,86,0,0,1,59.6
+Yale University,3,47600,47600,12336,6.3,Private,y,City,23858561000,98.8,74.6,87,0,0,1,49.9
+Stanford University,4,46320,46320,16795,5.1,Private,y,Suburban,21466006000,98.3,70.2,76,24,28,1,48.3
+Columbia University,4,51008,51008,24221,7,Private,y,Urban,9223047000,99,82.4,90,19,9,1,49.4
+University of Chicago,4,50193,50193,12558,8.8,Private,y,Urban,6539289712,99,77.1,87,8,12,3,45.7
+Massachusetts Institute of Technology,7,46704,46704,11319,7.9,Private,y,Urban,12425131000,98,67.3,81,50,32,1,59.4
+Duke University,8,49341,49341,15856,11.4,Private,y,Suburban,7036776000,97,73,87,30,39,1,45.5
+University of Pennsylvania,9,49536,49536,21296,10.4,Private,y,Urban,9582335000,97.8,67.4,87,30,27,1,47.8
+Johns Hopkins University,10,48710,48710,21484,15,Private,y,Urban,3392529000,96.8,71.9,88,23,25,3,46.7
+California Institute of Technology,10,45390,45390,2209,8.8,Private,y,Suburban,2118100000,97,64.9,85,0,0,3,50.4
+Dartmouth College,12,49506,49506,6298,11.5,Private,y,Rural,4468219698,98.3,64,88,46,44,1,51.1
+Northwestern University,12,49047,49047,20336,13.1,Private,y,Suburban,7501116000,97,76.3,85,29,32,1,44.2
+Brown University,14,49346,49346,9181,8.7,Private,y,City,299749000,97.5,68.3,84,22,10,1,45.2
+Vanderbilt University,15,43838,43838,12686,13.1,Private,y,Urban,4046250000,96.5,66,88,32,54,1,48.7
+Cornell University,15,49116,49116,21850,14.2,Private,y,Rural,5889948788,96.8,55.3,87,27,23,1,47.4
+Washington University in St. Louis,15,48093,48093,14348,17.1,Private,y,Suburban,6719449000,96.5,65.9,90,25,25,3,40
+Rice University,18,42253,42253,6621,15.1,Private,y,Urban,6719449000,96.8,67.5,82,0,0,1,39.2
+University of Notre Dame,18,47929,47929,12179,16,Private,y,City,8189096000,97.8,57.6,91,0,0,1,45.2
+UC Berkeley,20,13432,31840,37581,21,Public,y,City,3730882000,96.8,59,72,10,10,1,51.2
+Georgetown University,21,48611,48611,17858,17.4,Private,y,Urban,1461276000,96,60.8,91,0,0,1,38.2
+Emory University,21,46314,46314,14769,26.8,Private,y,City,6981307921,95,60.9,84,28,30,3,44.4
+UCLA,23,12753,35631,43239,18.6,Public,y,Urban,3001846000,96.5,50.9,73,15,15,1,55.3
+University of Southern California,23,50210,50210,42469,18,Private,y,Urban,3001846000,96.8,57.1,76,25,20,1,39.3
+Carnegie Mellon University,23,50410,50410,13285,24.6,Private,y,Urban,1235967714,95.3,64.9,72,21,20,3,44.7
+University of Virginia,26,14526,43822,23732,29,Public,y,Suburban,5876310216,97,55,87,25,28,1,33.3
+Tufts University,27,50604,50604,10907,17.3,Private,y,Suburban,1590045000,96.3,68.8,88,19,17,3,38.7
+Wake Forest University,27,47682,47682,7788,34.4,Private,y,Suburban,1148026000,93.5,54.8,83,39,58,1,35.3
+University of Michigan-Ann Arbor,29,14336,43377,43625,32.2,Public,y,City,9603919000,96.8,48.1,76,17,25,1,38.3
+UNC Chapel Hill,30,8562,33644,29135,28.5,Public,y,Suburban,2659759286,96.8,39.2,81,18,18,1,43.6
+Boston College,30,49324,49324,13575,33.9,Private,y,Suburban,2105654033,95.3,52.3,88,0,0,1,40.6
+New York University,32,46170,46170,49274,35.5,Private,y,Urban,3435034000,92,61.1,72,7,6,3,52.8
+University of Rochester,33,48290,48290,11060,36.4,Private,y,Suburban,2015282553,96,68.8,73,20,26,3,51.4
+College of William and Mary,34,16919,40516,8437,33,Public,y,Suburban,797592276,95.5,47.5,83,27,32,1,32.7
+Brandeis University,34,49598,49598,5945,35.2,Private,y,Suburban,861152444,93.5,61.5,85,0,0,3,52.5
+Georgia Institute of Technology,36,12204,32396,23109,33.4,Public,y,Urban,1889014000,95.5,38.6,37,23,30,1,39
+UC Santa Barbara,37,13865,38573,23051,36.3,Public,y,Suburban,333329000,92,49.4,72,8,13,1,60
+Case Western Reserve University,37,44560,44560,10771,38.3,Private,y,Urban,1758570000,93,61.6,64,34,35,3,56.5
+UC San Diego,39,14042,38066,29909,33.5,Public,y,Urban,850631000,94.8,38.1,57,12,12,2,59.4
+UC Irvine,39,14577,37455,30051,37.4,Public,y,Suburban,494728000,92.8,58.3,68,10,10,1,67.8
+Tulane University,41,49638,49638,13531,28,Private,y,Urban,1169060000,90.3,65.1,70,30,50,1,36.1
+Boston University,41,48436,48436,32112,34.5,Private,y,Urban,1616004000,92.5,59.8,80,7,11,1,38.9
+Rensselaer Polytechnic Institute,41,49341,49341,7028,37.5,Private,y,Suburban,654099000,93.3,52.4,61,30,16,3,62.7
+UC Davis,41,13951,38659,34508,40.6,Public,y,City,968230000,92.8,34.8,55,,,1,64.1
+University of Wisconsin- Madison,41,10415,29665,43193,49.8,Public,y,City,3133196699,94.8,45.8,56,9,8,1,37.2
+University of Illinois- Urbana-Champaign,41,15626,30786,45140,59,Public,n,City,1552048256,93.8,41.7,69,23,23,1,43.4
+Northeastern University,47,45530,45530,19798,32.2,Private,y,Urban,729034000,95.8,64.4,70,,,1,37.6
+Lehigh University,47,46230,46230,7119,34.3,Private,y,City,1215926000,94.8,48.9,76,40,45,1,41
+University of Florida,47,6313,28591,50350,47.1,Public,y,Suburban,1519964000,95.8,49.1,67,21,23,1,51.5
+Pennsylvania State University- University Park,47,17514,31346,47040,50.3,Public,n,City,1739023006,92.3,38.4,66,17,19,1,47.3
+University of Miami ,51,45724,45724,16774,38.2,Private,y,Suburban,865434666,91.5,51.8,68,16,19,1,43.1
+Yeshiva University ,52,39530,39530,6438,81.8,Private,n,Urban,921055000,90.5,62.4,59,0,0,3,51.9
+Pepperdine University ,52,48342,48342,7417,35.5,Private,y,Suburban,790483000,92.3,69.1,75,18,31,1,55.9
+University of Texas—?Austin ,52,9830,34836,51313,39.7,Public,y,Urban,3376824061,93.5,36.5,52,15,17,1,42.9
+Ohio State University—?Columbus ,52,10037,26537,58322,53,Public,n,Urban,3595323149,92.8,29.6,61,,,1,49.7
+University of Washington ,52,12394,33513,44784,55.2,Public,n,Urban,2915057707,93.3,35.1,61,16,15,1,
+Worcester Polytechnic Institute ,57,45590,45590,6381,43.8,Private,y,City,433062000,96,65.7,74,30,48,3,65.1
+George Washington University ,57,50435,50435,25613,43.8,Private,y,Urban,1576508000,92.8,57,72,26,31,1,46.4
+University of Maryland—?College Park ,57,9996,31144,37610,47.8,Public,y,Suburban,487268756,95,45.4,67,13,14,1,42.5
+University of Connecticut ,57,13364,34908,26541,50,Public,n,Rural,367014863,93,52,67,8,12,1,55.6
+Southern Methodist University ,61,48190,48190,11272,52.4,Private,n,Urban,1425146000,89.5,58.6,67,33,46,1,35.7
+Clemson University ,61,14240,32796,21857,52.8,Public,n,Suburban,836151997,91.3,51.6,61,10,15,1,44.5
+Syracuse University ,61,43318,43318,21492,53.2,Private,n,City,1183243707,92,62.6,69,24,28,1,56.7
+University of Georgia ,61,11622,29832,35197,55.8,Public,n,City,75806989,94,38.8,61,22,29,1,43.1
+Purdue University—?West Lafayette ,61,10002,28804,38770,59.2,Public,n,City,2445541926,91.5,38.6,46,17,20,1,43.3
+Brigham Young University—?Provo ,66,5150,5150,30484,47,Private,y,City,140770000,88,57.1,29,0,0,1,46.8
+Fordham University ,66,45623,45623,15231,48.1,Private,y,Urban,675054000,89,48,75,0,0,1,
+University of Pittsburgh ,66,18192,28958,28617,53.1,Public,n,Urban,3470665237,91.8,40.1,65,11,10,1,53.2
+University of Minnesota—?Twin Cities ,69,13560,20810,51147,45.4,Public,y,Urban,2992707059,90.8,38.2,58,,,1,49
+Texas A&M University—?College Station ,70,9180,26356,61263,71,Public,n,City,10521034492,91.3,21.6,50,3,6,1,42
+Virginia Tech ,70,12017,27444,31224,72.6,Public,n,Rural,788800000,92,28.1,61,19,14,1,43.1
+American University ,72,43103,43103,13061,45.8,Private,y,Suburban,546000000,89.3,49.5,76,,,1,54.2
+Baylor University ,72,40198,40198,16263,55.4,Private,n,City,1151200304,87.3,48.8,55,15,28,1,56.5
+"Rutgers, The State University of New Jersey—?New Brunswick ",72,14131,29521,48378,60.5,Public,n,City,763561000,91.5,47.7,59,,,1,55
+Colorado School of Mines ,75,17383,34828,5795,36.5,Public,y,Suburban,231605058,91,26.5,42,14,18,2,52.1
+Stevens Institute of Technology ,75,47190,47190,6125,43.8,Private,y,City,173055000,94.8,33.7,40,25,25,3,
+Clark University ,75,41940,41940,3423,54,Private,n,City,392091757,89,56.2,72,0,0,3,58.9
+University of Massachusetts—?Amherst ,75,14356,30689,28635,61.3,Public,n,Suburban,307098028,89,45.2,63,8,6,1,57.4
+University of Delaware ,75,12342,30692,21870,65.9,Public,n,Suburban,1310133033,92.3,31.7,68,17,21,1,49.4
+Michigan State University ,75,13560,36360,50085,66.1,Public,n,Suburban,2549137018,91.3,23.5,53,8,7,1,45.8
+Indiana University—?Bloomington ,75,10388,33741,46416,76.1,Public,n,City,961053869,89,36,59,22,18,1,40.5
+Texas Christian University ,82,40720,40720,10033,48.9,Private,y,Suburban,1393241000,89.3,39.7,59,41,56,1,37.7
+University of California—?Santa Cruz ,82,13481,38189,17866,57,Public,n,Suburban,214892000,90.3,50.1,57,0,0,3,68.4
+Miami University—?Oxford ,82,14287,30987,18620,65.8,Public,n,Rural,635188826,89.5,32.6,66,22,31,1,36.6
+University of Iowa ,82,8104,27890,31387,81,Public,n,City,1251356000,86,50.7,48,14,19,1,46.3
+University of Tulsa ,86,36962,36962,4682,40.3,Private,y,City,1023411834,88,61.6,52,21,23,1,40.3
+Marquette University ,86,37170,37170,11745,66.7,Private,n,Urban,531700000,89.5,36.1,59,11,20,1,56.8
+University of Denver ,86,44178,44178,11809,76.5,Private,n,City,467252915,86.8,55.6,66,24,32,1,42
+Stony Brook University—?SUNY ,89,8855,23935,24607,41.3,Public,y,Suburban,196350990,90.3,45.4,48,3,3,1,56.9
+Binghamton University—?SUNY ,89,9044,22164,16695,44.1,Public,y,Suburban,101414229,90.5,43.9,68,12,10,1,49
+University of San Diego ,89,44586,44586,8349,46.3,Private,y,Urban,468766000,89.3,41.2,67,24,37,1,52.9
+SUNY College of Environmental Science and Forestry ,89,7770,17620,2457,51.1,Public,n,City,26368436,84.8,67,47,5,5,,69.6
+North Carolina State University—?Raleigh ,89,8581,24932,33989,51.4,Public,n,City,855055000,92.3,28.3,42,11,17,1,49.5
+University of Vermont ,89,16226,37874,12856,73.4,Public,n,Suburban,406131000,85.8,52.2,66,7,7,1,56
+University of Colorado—?Boulder ,89,11091,34125,32080,84.2,Public,n,City,510646451,84,48.3,46,11,19,1,36.9
+University of Alabama ,96,10170,25950,36047,51.1,Public,n,Suburban,667980131,86.5,40.5,39,26,40,1,42.1
+Florida State University ,96,6507,21673,41226,55.4,Public,n,City,624556561,92,32.7,61,17,24,1,51.3
+Saint Louis University ,96,39226,39226,13287,60.3,Private,n,Urban,1076959263,87.5,49.9,61,18,26,1,56.2
+University at Buffalo—?SUNY ,99,8870,22290,29944,57.8,Public,n,Suburban,624790675,87.8,35.6,53,2,2,1,64.4
+Drexel University ,99,48791,48791,23890,76,Private,n,Urban,660150000,85,57.2,24,12,11,1,56.6
+Loyola University Chicago ,99,39179,39179,15902,63.3,Private,n,City,538523000,86.3,39.4,65,9,10,1,68.8

@@ -1,0 +1,62 @@
+---
+title: "A Bubble Plot"
+author: "Ellie Grace Moore"
+date: "4/11/2022"
+output: 
+  html_document:
+    df_print: paged
+    theme: cosmo
+    highlight: kate
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(corrplot)
+library(ggplot2)
+library(ggplot2)
+library(kableExtra)
+library(tidyverse)
+library(HSAUR2)
+library(hrbrthemes)
+library(dplyr)
+library(viridis)
+```
+
+```{r}
+USairpollution <- tibble(USairpollution)
+head(USairpollution)
+```
+
+To visualize multiple variables at once, we create a **bubble plot.** The specific plot below plots the average annual wind speed and average annual temperature for a city along with the number of manufacturing enterprises, and the SO2 content in the air (micrograms per cubic meter).
+ 
+```{r, fig.align='center'}
+USairpollution %>%
+  ggplot(aes(x = wind, y = temp, size = SO2, fill = manu)) +
+        geom_point(alpha = 0.5, shape = 21, color = "black") +
+        scale_size(range = c(2, 12)) +
+        scale_fill_viridis(discrete = FALSE, option = "C") +
+        ggtitle("Comparing SO2 Levels with Average Wind Speed, Temperature, \n and Manufacturing Plants") +
+        xlab("Average Annual Wind Speed (mph)") + ylab("Average Annual Temperature (Fahrenheit)") +
+        theme_minimal()
+```
+
+
+Here is another example involving the `starwars` dataset from the dplyr package.
+
+```{r, fig.align='center', include=FALSE}
+starwars <- tibble(starwars[c(1:5, 10, 13, 19, 20, 26, 34, 31, 77), c(1:3,10,11)])
+```
+
+``` {r, fig.align='center'}
+starwars %>%
+  ggplot(aes(x = name, y = height, size = mass, fill = species)) +
+  xlab("Character") +
+  ylab("Height") +
+        ylim(65,250) + 
+        geom_point(alpha = 0.5, shape = 21, color = "black") +
+        scale_size(range = c(5, 20)) +
+        theme_minimal() +
+   scale_fill_viridis(discrete = TRUE, option = "C") +
+        theme(axis.text.x = element_text(angle = 60, vjust = 1, hjust=1)) + 
+  ggtitle("Characteristics of Different Starwars Characters")
+```
