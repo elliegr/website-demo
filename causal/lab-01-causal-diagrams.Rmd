@@ -1,0 +1,254 @@
+---
+title: "Lab 01 - Causal Diagrams"
+author: "Ellie Grace Moore"
+date: "2/15/2022"
+output: 
+  html_document: 
+    highlight: kate
+    theme: cosmo
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(ggdag)
+library(dagitty)
+```
+
+## Exercise 1
+
+While thinking about the numerous causes of cancer, or one to drink coffee or smoke, I have decided to add the following variables: 
+
+```{r}
+cancer ~ smoking + genetics + vegan + environment
+smoking ~ addictive_behavior + DARE + environment
+coffee ~ addictive_behavior + likes_taste + natural_energy + environment
+```
+
+
+## Exercise 2
+
+```{r}
+dagify(
+cancer ~ smoking + genetics + vegan + environment,
+smoking ~ addictive_behavior + DARE + environment,
+coffee ~ addictive_behavior + likes_taste + natural_energy + environment,
+  exposure = "coffee", 
+  outcome = "cancer"
+) %>%
+  ggdag() + 
+  theme_dag() 
+```
+
+## Exercise 3
+```{r}
+dag <-
+  dagify(
+cancer ~ smoking + genetics + vegan + environment,
+smoking ~ addictive_behavior + DARE + environment,
+coffee ~ addictive_behavior + likes_taste + natural_energy + environment,
+  exposure = "coffee", 
+  outcome = "cancer"
+) 
+
+dag %>%
+  tidy_dagitty(layout = "circle") %>%
+  ggdag() +
+  theme_dag() +
+  geom_dag_node(color = "cornflowerblue") +
+  geom_dag_text(color = "black") +
+  geom_dag_edges()
+
+```
+
+
+## Exercise 4
+
+```{r dconnected}
+dag %>% ggdag_dconnected()
+```
+Based on the plot above, coffee and cancer are D-connected.
+
+## Exercise 5
+
+```{r}
+dag %>% 
+  ggdag_paths() 
+```
+
+
+## Exercise 6
+
+```{r}
+dag %>% 
+  ggdag_paths() +
+  theme_dag_grid() +
+  geom_dag_node(color = "cornflowerblue") + 
+  geom_dag_text(color = "black") + 
+  geom_dag_edges()
+```
+
+
+## Exercise 7
+
+```{r}
+dag <-
+  dagify(
+    cancer ~ smoking + genetics + vegan + environment,
+    smoking ~ addictive_behavior + DARE + environment,
+    coffee ~ addictive_behavior + likes_taste + natural_energy + environment,
+    exposure = "coffee",
+    outcome = "cancer",
+    labels = c(
+      "coffee" = "Coffee",
+      "cancer" = "Lung Cancer",
+      "smoking" = "Smoking",
+      "addictive_behavior" = "Addictive \nBehavior",
+      "genetics" = "Genetics",
+      "vegan" = "Vegan",
+      "environment" = "Environment",
+      "likes_taste" = "Likes \nTaste?",
+      "natural_energy" = "Natural \nEnergy"
+    )
+  )
+
+dag %>% 
+  ggdag_paths(use_labels = "label", text = FALSE) +
+  theme_dag_grid() + 
+  geom_dag_node(color = "grey") + 
+  geom_dag_edges() 
+```
+
+
+## Exercise 8
+
+```{r}
+dag %>%
+ggdag_adjustment_set(use_labels = "label", text = FALSE) 
+```
+From the plots above we are able to see that we can either adjust for environment and addictive behavior; or we can adjust for environment and smoking.
+
+## Exercise 9
+
+Below is the necessary setup for our adjustments.
+
+```{r}
+n <- 1000
+
+addictive_behavior <- rnorm(n)
+vegan <- rnorm(n)
+DARE <- rnorm(n)
+natural_energy <- rnorm(n)
+genetics <- rnorm(n)
+likes_taste <- rnorm(n)
+environment <- rnorm(n)
+smoking <- addictive_behavior + DARE + environment + rnorm(n)
+cancer <- smoking + genetics + vegan + environment + rnorm(n)
+coffee <- addictive_behavior + likes_taste + natural_energy + environment + rnorm(n)
+```
+
+
+We will now adjust for environment and addictive behavior:
+
+```{r}
+lm(cancer ~ coffee + environment + addictive_behavior) %>%
+  summary()
+```
+From the summary of our model above, we see that coffee has a p-value of 0.965. Hence we can fail to reject the null hypothesis that coffee causes lung cancer. We will now adjust for smoking and environment:
+
+```{r}
+lm(cancer ~ coffee + environment + smoking) %>%
+  summary()
+```
+For this model we see that our p-value is 0.708. Therefore we once again fail to reject the null that coffee causes lung cancer. Finally, we will write the model without adjustments:
+
+```{r}
+lm(cancer ~ coffee) %>%
+  summary()
+```
+From the summary above, we see that coffee has a p-value of essentially 0. Therefore for our unadjusted model we can reject the null that coffee causes lung cancer. 
+
+## Exercise 10
+
+```{r}
+dag <-
+  dagify(
+    cancer ~ smoking + genetics + vegan + environment,
+    smoking ~ addictive_behavior + DARE + environment,
+    coffee ~ addictive_behavior + likes_taste + natural_energy + environment,
+    exposure = "coffee",
+    outcome = "cancer",
+    labels = c(
+      "coffee" = "Coffee",
+      "cancer" = "Lung Cancer",
+      "smoking" = "Smoking",
+      "addictive_behavior" = "Addictive \nBehavior",
+      "genetics" = "Genetics",
+      "vegan" = "Vegan",
+      "environment" = "Environment",
+      "DARE" = "D.A.R.E.",
+      "likes_taste" = "Likes \nTaste?",
+      "natural_energy" = "Natural \nEnergy"
+    ),
+    latent = "addictive_behavior"
+  )
+
+dag %>% 
+  ggdag_adjustment_set(use_labels = "label", text = FALSE)
+```
+When marking addictive behavior as a latent variable, it is then removed from the variables that needs to be adjusted. So we only have to adjust smoking and environment. We will now add smoking to the list of latent variables:
+
+```{r}
+dag <-
+  dagify(
+    cancer ~ smoking + genetics + vegan + environment,
+    smoking ~ addictive_behavior + DARE + environment,
+    coffee ~ addictive_behavior + likes_taste + natural_energy + environment,
+    exposure = "coffee",
+    outcome = "cancer",
+    labels = c(
+      "coffee" = "Coffee",
+      "cancer" = "Lung Cancer",
+      "smoking" = "Smoking",
+      "addictive_behavior" = "Addictive \nBehavior",
+      "genetics" = "Genetics",
+      "vegan" = "Vegan",
+      "environment" = "Environment",
+      "DARE" = "D.A.R.E.",
+      "likes_taste" = "Likes \nTaste?",
+      "natural_energy" = "Natural \nEnergy"
+    ),
+    latent = c("addictive_behavior", "smoking")
+  )
+
+dag %>% 
+  ggdag_adjustment_set(use_labels = "label", text = FALSE)
+```
+
+When we add smoking to the latent variables, we receive an error that says "Failed to close backdoor paths. Common reasons include...". This is because there are no ways to block backdoor paths and now everything is connected. 
+
+## Exercise 11
+
+Looking at an article from the journal, *Demography* volume 35, issue 2, researchers examined the effect of maternal education on three markers of child health: infant mortality,
+children s height-for-age. and immunization status. They acknowledge other variables such as socioeconomic status, water access, toilet access, residence, and husbands education. For this particular study, I found that they did a good job identifying different confounders and taking them into account.
+
+```{r}
+dagify(
+child_health ~ maternal_ed + socio + water + toilet + residence,
+maternal_ed ~ residence + socio + residence + husband_ed,
+  exposure = "maternal_ed", 
+  outcome = "child_health",
+  labels = c(
+    "child_health" = "Child \n Health",
+    "maternal_ed" = "Maternal \n Education",
+    "water" = "Water \n Access",
+    "toilet" = "Toilet \n Access",
+    "socio" = "Socioeconomic \n Status",
+    "husband_ed" = "Husband \n Education",
+    "residence" = "Residence"
+  )
+) %>%
+  ggdag(use_labels = "label", text = FALSE) +
+  theme_dag() + 
+  geom_dag_node(color="cornflowerblue")
+```
+

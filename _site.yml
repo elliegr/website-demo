@@ -7,9 +7,9 @@ navbar:
         - text: "Bubble Plots"
           href: data viz/Bubble-Plots.html
         - text: "Visualizing Distributions"
-          href:
-        - text: "3D Scatterplots"
-          href:
+          href: data viz/Visualizing-Distributions.html
+        - text: "Missing Data"
+          href: data viz/Missing-Data.html
     - text: "Regression"
       menu:
         - text: "Linear"
@@ -24,10 +24,14 @@ navbar:
           href: 
     - text: Causal Inference
       menu:
-        - text: "1"
-          href: "lab-02-propensity-scores.html"
-        - text: "Decision Trees"
-          href: 
+        - text: "Causal Diagrams"
+          href: causal/lab-01-causal-diagrams.html
+        - text: "Using Propensity Scores"
+          href: causal/lab-03-using-propensity-scores.html
+        - text: "Causal Analysis I"
+          href: causal/causal-analysis-I.html
+        - text: "Causal Analysis II"
+          href:
     - text: Tidy Data
       menu:
         - text: "Mushrooms"
@@ -37,5 +41,5 @@ navbar:
       href: https://github.com/elliegr
 output:
   html_document:
-    theme: flatly
+    theme: cosmo
 output_dir: "."    

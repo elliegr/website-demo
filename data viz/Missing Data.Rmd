@@ -3,17 +3,37 @@ title: "Missing Data"
 author: "Ellie Grace Moore"
 date: "4/14/2022"
 output: 
-github_document:
-  df_print: kable
+  html_document:
+    theme: cosmo
+    highlight: kate
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', warning = FALSE)
 library(faraway)
+library(mice)
+library(ggplot2)
 library(visdat)
 ```
 
+Before starting an analysis, one must familiarize themselves with the contents of the dataset. This specifically applies to missing data. Luckily, the `visdat` package allows us to create a plot that outlays the missing data in a visually-friendly way. For this example, we are working with the `mammalsleep` dataset. The first few rows are shown below.
+
+```{r, include=FALSE}
+head(mammalsleep)
+```
+
 ```{r}
-vis_dat(nhefs)
+vis_dat(mammalsleep, palette = "cb_safe") +
+  ggtitle("Visualizing Missing Data for The Mammalsleep Dataset")
+```
+
+From the plot above, we are able to tell that nondream and dream have the most missing values, followed by lifespan, sleep, and gestation. A method to "replace" this data is to use predictive mean matching. The code below conducts this process, and we see a new plot to ensure that there are no missing values.
+
+```{r}
+mice <- mice(mammalsleep, m=1, method = "pmm", printFlag = FALSE)
+complete_data <- complete(mice)
+vis_dat(complete_data, palette = "cb_safe") +
+  ggtitle("Visualizing Missing Data after Predictive Mean Matching", sub = "There are none!") 
 ```
 
