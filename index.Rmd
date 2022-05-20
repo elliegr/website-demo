@@ -1,12 +1,14 @@
 ---
-title: "Example Website"
+title: "The Coding Cave"
 ---
-This is markdown
 
-  * I can include bullets
-  
-## I can include headers
+<right>  Throughout this website you will find reader-friendly copies of different coding projects I've completed. All code is done and compiled in R Markdown. Topics include:
 
-<img src = "img/img.jpg>
+* Data Visualization
+* Regression
+* Statistical Learning
+* Causal Inference
+* Tidy Data </right>
 
-I can include <i> html</i>
+<img src = "r hex sticker.png">
+

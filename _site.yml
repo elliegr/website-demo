@@ -1,6 +1,6 @@
-name: "example-website"
+name: "The-coding-cave"
 navbar: 
-  title: "This is an example!"
+  title: "EG's Coding Cave"
   left: 
     - text: "Data Visualization"
       menu:
