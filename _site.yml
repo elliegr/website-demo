@@ -13,15 +13,19 @@ navbar:
     - text: "Regression"
       menu:
         - text: "Linear"
-          href: 
+          href: regression/Lab-05 (1).html
         - text: "General"
           href: regresssion/GLM-project.html
     - text: Statistical Learning
       menu:
         - text: "Cross Validation"
-          href: "lab-02-propensity-scores.html"
+          href: stat learning/Cross Validation.html
         - text: "Decision Trees"
-          href: 
+          href: stat learning/Decision-Tree.html
+        - text: "Ridge, Lasso, and Elastic Net"
+          href: stat learning/363 Project.html
+        - text: "Random Forest, Boosted Trees, Elastic Net"
+          href: Lab-07.html
     - text: Causal Inference
       menu:
         - text: "Causal Diagrams"
