@@ -1,0 +1,107 @@
+---
+title: "Data Analysis Utilizing Logistic Regression: Mushroom Foraging"
+author: "Ellie Grace Moore"
+date: "12/10/2021"
+output:
+  html_document:
+    theme: cosmo
+    highlight: kate
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+library(dplyr)
+library(broom)
+library(tidyr)
+library(recipes)
+library(tidyverse)
+library(tidymodels)
+library(ISLR)
+```
+
+### The Original Data 
+
+|       The data we will analyze was adapted from Kaggle. The original data set includes 8,124 observations of 23 variables; however, we will perform some explanatory data analysis in order to simplify and "tidy" this data set in order for it to have optimal compatibility for logistic regression. 
+
+<br/>
+
+```{r,echo=FALSE}
+mushrooms <- read.csv("mushrooms.csv")
+head(mushrooms)
+```
+
+<br/>
+
+
+|       Note that this data frame includes characteristics such as `gill.spacing`, `ring.type`, and other slightly more "technical" variables. In order for this analysis to be the most meaningful, we will strictly focus on the variables which--given my level of knowledge on the subject--I am easily able to classify. With this being said, the variables we will further analyze are:
+
+<br/>
+
+
+- **cap.surface** How the surface of the mushroom feels: fibrous=f, grooves=g, scaly=y, smooth=s
+- **cap.color** The color of the mushroom cap: brown=n, buff=b, cinnamon=c, grey=g, green=r, pink=p, purple=u, red=r, white=w, yellow=y
+- **bruises** Slight discoloration of the mushroom in spots: bruises=t, no bruises=false
+- **odor** The smell of the mushroom: almond=a, anise=I, creosote=c, fishy=y, foul=f, musty=m, none=n, pungent=p, spicy=s
+- **habitat** Where the mushroom was found: grasses=g, leaves=l, meadows=m, paths=p, urban=u, waste=w, woods=d
+- **population** The number of mushrooms of similar characteristics found in the area: abundant=a, clustered=c, numerous=n, scattered=s, several=v, solitary=y
+- **class** The edibility of the mushroom: poisonous=p, edible=e
+
+|       To get a better idea of what each of these variables entail, we look at barplots of each categorical variable (i.e. those that are not already an indicator) in order to see their frequencies among the different classifications.
+
+```{r EDA2, echo=FALSE, fig.align='center'}
+capcolor <- table(mushrooms$cap.color)
+population <- table(mushrooms$population)
+habitat <- table(mushrooms$habitat)
+odor <- table(mushrooms$odor)
+capsurface <- table(mushrooms$cap.surface)
+class <- table(mushrooms$class)
+par(mfrow = c(2, 3))
+barplot(capsurface, main ="Cap Surface")
+barplot(capcolor, main = "Cap Color")
+barplot(odor, main = "Odor")
+barplot(habitat, main = "Habitat")
+barplot(population, main= "Population")
+barplot(class, main = "Class")
+#Let's get rid of the least common ones just to make the number of parameters lower
+```
+
+|   The frequencies for each category appear to be relatively spaced out, aside from a few minuscule categories. In order for this analysis to be the most useful to the amateur mushroom forager (i.e. like myself); I have chosen to re-categorize the data in order to make each of the above variables into indicator variables. 
+
+```{r, cleaning data, include=FALSE}
+mushrooms <- mushrooms %>% 
+    mutate(Colorful = ifelse(cap.color %in% c("e", "b", "c", "r", "p", "u", "y"), "Yes", "No"),
+           Odor = ifelse(odor %in% c("f", "a", "i", "c", "y", "m", "p", "s"), "Yes", "No"),
+           Smooth = ifelse(cap.surface %in% c("y", "f", "g"), "Yes", "No"),
+           Poisonous = ifelse(class == "p", 1, 0),
+           Bruises = ifelse(bruises == "t", "Yes", "No"),
+           Clustered = ifelse(population %in% c("a", "c", "n", "s", "v"), "Yes", "No"),
+           Grass = ifelse(habitat %in% c("g", "m"), "Yes", "No"),
+           Woods = ifelse(habitat %in% c("l", "d"), "Yes", "No"))
+
+mushroom_new <- subset(mushrooms[,-c(1:23)])
+```
+
+### The Tidy Data
+
+|       After altering the original data frame and tidying up the data, we are left with the following indicator variables. Due to the location of common foraging, we choose to focus on grassy and wooded areas. The tidy data frame is shown below.
+
+<br/>
+
+
+- **Colorful** Is the mushroom colorful? Yes or no. 
+- **Odor** Does the mushroom have an odor? Yes or no.
+- **Smooth** Is the mushroom cap smooth? Yes or no.
+- **Poisonous** Whether the mushroom is poisonous.
+- **Bruises** Does the mushroom have bruises? Yes or no.
+- **Clustered** Is the mushroom clustered/numerous (versus solitary)? Yes or no.
+- **Grass** Was the mushroom found in the grass? Yes or no. This variable includes meadows and grass.
+- **Woods** Was the mushroom found in the woods? Yes or no. 
+
+<br/>
+
+
+```{r tidy data}
+data.frame(table(mushroom_new))[,-c(9, 10)]
+```
+

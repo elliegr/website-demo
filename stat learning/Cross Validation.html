@@ -1,0 +1,185 @@
+---
+title: "Lab 02 - Cross Validation"
+author: "Ellie Grace Moore"
+date: "3/16/2022"
+output: 
+  html_document: 
+    highlight: kate
+    theme: cosmo
+---
+
+<script src="Cross Validation_files/header-attrs/header-attrs.js"></script>
+
+
+<p>The k-fold cross validation approach is implemented by first randomly splitting the data into k equal-sized parts. Then, leaves out one of these parts, then fits a model to the k-1 parts and then uses the part we left out to calculate the test error of the model. This process is repeated until we left out every piece of data, and then we take the k values for test error, then average them in order to calculate our final estimate for the test error for the model.</p>
+<p>Some advantages of k-fold cross validation compared to the validation set (when the data is randomly divided into two equal parts) appraoch is that we are able to use more data to fit our model to, and we are able to calculate numerous values for the test error and then take the average for an ideally better estimate. The validation set approach on the other hand only uses roughly half the data to fit the model to and it can be highly variable depending on which specific subset we choose to fit the model to. An advantage to the validation set approach is that we are working with (assumably) much more data when calculating the test error compared to the k-fold cv. Now, for LOOCV, we use just about the entire data set to fit the model (except for the point we left out) which results in a much less biased model than k-fold cv and validation set and has no randomness involved. However a key disadvantage to LOOCV is that it can potentially take much longer to compute since we are doing a k-fold cv for when k=n. Another disadvantage is that it has a higher variance, since we are averaging n values for the test error.</p>
+<pre class="r"><code>set.seed(100)
+Auto_split  &lt;- initial_split(Auto, prop = 0.5)
+Auto_train  &lt;- training(Auto_split)
+Auto_test   &lt;- testing(Auto_split)</code></pre>
+<pre class="r"><code>lm_spec &lt;-
+  linear_reg() %&gt;%
+  set_engine(&quot;lm&quot;)
+vs_fit_1      &lt;- fit(lm_spec, 
+                   mpg ~ horsepower, 
+                   data = Auto_train)
+mpg_pred_1 &lt;- vs_fit_1 %&gt;% 
+  predict(new_data = Auto) %&gt;% 
+  bind_cols(Auto)
+mpg_pred_1</code></pre>
+<pre><code>## # A tibble: 392 × 10
+##    .pred   mpg cylinders displacement horsepower weight acceleration  year
+##  * &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;      &lt;dbl&gt;  &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;
+##  1 19.3     18         8          307        130   3504         12      70
+##  2 13.6     15         8          350        165   3693         11.5    70
+##  3 16.1     18         8          318        150   3436         11      70
+##  4 16.1     16         8          304        150   3433         12      70
+##  5 17.7     17         8          302        140   3449         10.5    70
+##  6  8.31    15         8          429        198   4341         10      70
+##  7  4.76    14         8          454        220   4354          9      70
+##  8  5.57    14         8          440        215   4312          8.5    70
+##  9  3.96    14         8          455        225   4425         10      70
+## 10  9.60    15         8          390        190   3850          8.5    70
+## # … with 382 more rows, and 2 more variables: origin &lt;dbl&gt;, name &lt;fct&gt;</code></pre>
+<pre class="r"><code>mpg_pred_1 %&gt;%
+rmse(truth = mpg, estimate = .pred)</code></pre>
+<pre><code>## # A tibble: 1 × 3
+##   .metric .estimator .estimate
+##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+## 1 rmse    standard        4.90</code></pre>
+<pre class="r"><code>vs_fit_2      &lt;- fit(lm_spec, 
+                   mpg ~ poly(horsepower, 2), 
+                   data = Auto_train)
+mpg_pred_2 &lt;- vs_fit_2 %&gt;% 
+  predict(new_data = Auto) %&gt;% 
+  bind_cols(Auto)
+mpg_pred_2</code></pre>
+<pre><code>## # A tibble: 392 × 10
+##    .pred   mpg cylinders displacement horsepower weight acceleration  year
+##  * &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;      &lt;dbl&gt;  &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;
+##  1  16.9    18         8          307        130   3504         12      70
+##  2  13.2    15         8          350        165   3693         11.5    70
+##  3  14.4    18         8          318        150   3436         11      70
+##  4  14.4    16         8          304        150   3433         12      70
+##  5  15.5    17         8          302        140   3449         10.5    70
+##  6  12.7    15         8          429        198   4341         10      70
+##  7  13.9    14         8          454        220   4354          9      70
+##  8  13.5    14         8          440        215   4312          8.5    70
+##  9  14.4    14         8          455        225   4425         10      70
+## 10  12.5    15         8          390        190   3850          8.5    70
+## # … with 382 more rows, and 2 more variables: origin &lt;dbl&gt;, name &lt;fct&gt;</code></pre>
+<pre class="r"><code>mpg_pred_2 %&gt;%
+rmse(truth = mpg, estimate = .pred)</code></pre>
+<pre><code>## # A tibble: 1 × 3
+##   .metric .estimator .estimate
+##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+## 1 rmse    standard        4.36</code></pre>
+<pre class="r"><code>vs_fit_3      &lt;- fit(lm_spec, 
+                   mpg ~ poly(horsepower, 3), 
+                   data = Auto_train)
+mpg_pred_3 &lt;- vs_fit_3 %&gt;% 
+  predict(new_data = Auto) %&gt;% 
+  bind_cols(Auto)
+mpg_pred_3</code></pre>
+<pre><code>## # A tibble: 392 × 10
+##    .pred   mpg cylinders displacement horsepower weight acceleration  year
+##  * &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;      &lt;dbl&gt;  &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;
+##  1  17.0    18         8          307        130   3504         12      70
+##  2  13.9    15         8          350        165   3693         11.5    70
+##  3  14.9    18         8          318        150   3436         11      70
+##  4  14.9    16         8          304        150   3433         12      70
+##  5  15.9    17         8          302        140   3449         10.5    70
+##  6  12.6    15         8          429        198   4341         10      70
+##  7  12.2    14         8          454        220   4354          9      70
+##  8  12.3    14         8          440        215   4312          8.5    70
+##  9  12.1    14         8          455        225   4425         10      70
+## 10  12.8    15         8          390        190   3850          8.5    70
+## # … with 382 more rows, and 2 more variables: origin &lt;dbl&gt;, name &lt;fct&gt;</code></pre>
+<pre class="r"><code>mpg_pred_3 %&gt;%
+rmse(truth = mpg, estimate = .pred)</code></pre>
+<pre><code>## # A tibble: 1 × 3
+##   .metric .estimator .estimate
+##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+## 1 rmse    standard        4.37</code></pre>
+<pre class="r"><code>set.seed(75)
+Auto_cv &lt;- vfold_cv(Auto, v = 5)
+
+results_1 &lt;- fit_resamples(lm_spec,
+                         mpg ~ horsepower, 
+                         resamples = Auto_cv)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;rlang&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:purrr&#39;:
+## 
+##     %@%, as_function, flatten, flatten_chr, flatten_dbl, flatten_int,
+##     flatten_lgl, flatten_raw, invoke, splice</code></pre>
+<pre><code>## 
+## Attaching package: &#39;vctrs&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     data_frame</code></pre>
+<pre><code>## The following object is masked from &#39;package:tibble&#39;:
+## 
+##     data_frame</code></pre>
+<pre class="r"><code>results_1 %&gt;%
+  collect_metrics()</code></pre>
+<pre><code>## # A tibble: 2 × 6
+##   .metric .estimator  mean     n std_err .config             
+##   &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;fct&gt;               
+## 1 rmse    standard   4.90      5  0.167  Preprocessor1_Model1
+## 2 rsq     standard   0.611     5  0.0128 Preprocessor1_Model1</code></pre>
+<pre class="r"><code>results_2 &lt;- fit_resamples(lm_spec,
+                         mpg ~ poly(horsepower, 2), 
+                         resamples = Auto_cv)
+
+results_2 %&gt;%
+  collect_metrics()</code></pre>
+<pre><code>## # A tibble: 2 × 6
+##   .metric .estimator  mean     n std_err .config             
+##   &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;fct&gt;               
+## 1 rmse    standard   4.36      5  0.192  Preprocessor1_Model1
+## 2 rsq     standard   0.690     5  0.0193 Preprocessor1_Model1</code></pre>
+<pre class="r"><code>auto_prep &lt;- Auto %&gt;%
+  recipe(mpg ~ horsepower) %&gt;%
+  step_poly(horsepower, degree = tune())
+
+auto_prep</code></pre>
+<pre><code>## Data Recipe
+## 
+## Inputs:
+## 
+##       role #variables
+##    outcome          1
+##  predictor          1
+## 
+## Operations:
+## 
+## Orthogonal polynomials on horsepower</code></pre>
+<pre class="r"><code>auto_tune &lt;- tune_grid(lm_spec,
+          auto_prep,
+          resamples = Auto_cv)
+auto_tune %&gt;%
+  collect_metrics()</code></pre>
+<pre><code>## # A tibble: 6 × 7
+##   degree .metric .estimator  mean     n std_err .config             
+##    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;fct&gt;               
+## 1      2 rmse    standard   4.36      5  0.192  Preprocessor1_Model1
+## 2      2 rsq     standard   0.690     5  0.0193 Preprocessor1_Model1
+## 3      3 rmse    standard   4.36      5  0.201  Preprocessor2_Model1
+## 4      3 rsq     standard   0.690     5  0.0207 Preprocessor2_Model1
+## 5      1 rmse    standard   4.90      5  0.167  Preprocessor3_Model1
+## 6      1 rsq     standard   0.611     5  0.0128 Preprocessor3_Model1</code></pre>
+<pre class="r"><code>auto_metrics &lt;- auto_tune %&gt;%
+  collect_metrics()
+
+auto_rmse &lt;- 
+  filter(auto_metrics, .metric == &quot;rmse&quot;)
+
+ggplot(auto_rmse, aes(x = degree, y = mean)) + 
+  geom_line(color = &quot;chartreuse3&quot;) +
+  geom_pointrange(ymin = 0, ymax = 3, color = &quot;chartreuse3&quot;) +
+  labs(x = &quot;Degree&quot;,
+       y = &quot;Cross Validation Error&quot;,
+       title = &quot;Error Comparisons for Different Degrees of 5-Fold Cross Validation&quot;) +
+  theme(plot.title = element_text(face = &quot;bold&quot;, hjust = .5))</code></pre>
+<p><img src="/projects/stat learning/Cross%20Validation_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>

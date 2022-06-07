@@ -15,7 +15,7 @@ navbar:
         - text: "Linear"
           href: 
         - text: "General"
-          href:
+          href: regresssion/GLM-project.html
     - text: Statistical Learning
       menu:
         - text: "Cross Validation"
@@ -31,11 +31,11 @@ navbar:
         - text: "Causal Analysis I"
           href: causal/causal-analysis-I.html
         - text: "Causal Analysis II"
-          href:
+          href: causal/data-analysis.html
     - text: Tidy Data
       menu:
         - text: "Mushrooms"
-          href: "lab-02-propensity-scores.html"
+          href: "tidy data/GLM-project.html"
   right: 
     - icon: fa-github fa-lg
       href: https://github.com/elliegr

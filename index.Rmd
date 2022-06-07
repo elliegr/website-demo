@@ -2,13 +2,20 @@
 title: "The Coding Cave"
 ---
 
-<right>  Throughout this website you will find reader-friendly copies of different coding projects I've completed. All code is done and compiled in R Markdown. Topics include:
+<br></br>
+
+Throughout this website you will find reader-friendly copies of different coding projects I've completed. All code is done and compiled in R Markdown.
+
+Topics include:
 
 * Data Visualization
 * Regression
 * Statistical Learning
 * Causal Inference
-* Tidy Data </right>
+* Tidy Data
 
-<img src = "r hex sticker.png">
+<br></br>
 
+<center>
+<img src="hexline.png"/>
+</center>

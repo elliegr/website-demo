@@ -1,0 +1,194 @@
+---
+title: "Data Analysis Utilizing Logistic Regression: Mushroom Foraging"
+author: "Ellie Grace Moore"
+date: "12/10/2021"
+output:
+  html_document:
+    theme: cosmo
+    highlight: kate
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+library(dplyr)
+library(broom)
+library(tidyr)
+library(recipes)
+library(tidyverse)
+library(tidymodels)
+library(ISLR)
+```
+
+### The Data 
+
+|       The data we will analyze was adapted from Kaggle. The original data set includes 8,124 observations of 23 variables; however, we will perform some explanatory data analysis in order to simplify and "tidy" this data set in order for it to have optimal compatibility for logistic regression. 
+
+<br/>
+
+```{r,echo=FALSE}
+mushrooms <- read.csv("mushrooms.csv")
+head(mushrooms)
+```
+
+<br/>
+
+
+|       Note that this data frame includes characteristics such as `gill.spacing`, `ring.type`, and other slightly more "technical" variables. In order for this analysis to be the most meaningful, we will strictly focus on the variables which--given my level of knowledge on the subject--I am easily able to classify. With this being said, the variables we will further analyze are:
+
+<br/>
+
+
+- **cap.surface** How the surface of the mushroom feels: fibrous=f, grooves=g, scaly=y, smooth=s
+- **cap.color** The color of the mushroom cap: brown=n, buff=b, cinnamon=c, grey=g, green=r, pink=p, purple=u, red=r, white=w, yellow=y
+- **bruises** Slight discoloration of the mushroom in spots: bruises=t, no bruises=false
+- **odor** The smell of the mushroom: almond=a, anise=I, creosote=c, fishy=y, foul=f, musty=m, none=n, pungent=p, spicy=s
+- **habitat** Where the mushroom was found: grasses=g, leaves=l, meadows=m, paths=p, urban=u, waste=w, woods=d
+- **population** The number of mushrooms of similar characteristics found in the area: abundant=a, clustered=c, numerous=n, scattered=s, several=v, solitary=y
+- **class** The edibility of the mushroom: poisonous=p, edible=e
+
+|       To get a better idea of what each of these variables entail, we look at barplots of each categorical variable (i.e. those that are not already an indicator) in order to see their frequencies among the different classifications.
+
+```{r EDA2, echo=FALSE, fig.align='center'}
+capcolor <- table(mushrooms$cap.color)
+population <- table(mushrooms$population)
+habitat <- table(mushrooms$habitat)
+odor <- table(mushrooms$odor)
+capsurface <- table(mushrooms$cap.surface)
+class <- table(mushrooms$class)
+par(mfrow = c(2, 3))
+barplot(capsurface, main ="Cap Surface")
+barplot(capcolor, main = "Cap Color")
+barplot(odor, main = "Odor")
+barplot(habitat, main = "Habitat")
+barplot(population, main= "Population")
+barplot(class, main = "Class")
+#Let's get rid of the least common ones just to make the number of parameters lower
+```
+
+|   The frequencies for each category appear to be relatively spaced out, aside from a few minuscule categories. In order for this analysis to be the most useful to the amateur mushroom forager (i.e. like myself); I have chosen to re-categorize the data in order to make each of the above variables into indicator variables. 
+
+```{r, cleaning data, include=FALSE}
+mushrooms <- mushrooms %>% 
+    mutate(Colorful = ifelse(cap.color %in% c("e", "b", "c", "r", "p", "u", "y"), "Yes", "No"),
+           Odor = ifelse(odor %in% c("f", "a", "i", "c", "y", "m", "p", "s"), "Yes", "No"),
+           Smooth = ifelse(cap.surface %in% c("y", "f", "g"), "Yes", "No"),
+           Poisonous = ifelse(class == "p", 1, 0),
+           Bruises = ifelse(bruises == "t", "Yes", "No"),
+           Clustered = ifelse(population %in% c("a", "c", "n", "s", "v"), "Yes", "No"),
+           Grass = ifelse(habitat %in% c("g", "m"), "Yes", "No"),
+           Woods = ifelse(habitat %in% c("l", "d"), "Yes", "No"))
+
+mushroom_new <- subset(mushrooms[,-c(1:23)])
+```
+
+### The Tidy Data
+
+|       After altering the original data frame and tidying up the data, we are left with the following indicator variables. Due to the location of common foraging, we choose to focus on grassy and wooded areas. The tidy data frame is shown below.
+
+<br/>
+
+
+- **Colorful** Is the mushroom colorful? Yes or no. 
+- **Odor** Does the mushroom have an odor? Yes or no.
+- **Smooth** Is the mushroom cap smooth? Yes or no.
+- **Poisonous** Whether the mushroom is poisonous.
+- **Bruises** Does the mushroom have bruises? Yes or no.
+- **Clustered** Is the mushroom clustered/numerous (versus solitary)? Yes or no.
+- **Grass** Was the mushroom found in the grass? Yes or no. This variable includes meadows and grass.
+- **Woods** Was the mushroom found in the woods? Yes or no. 
+
+<br/>
+
+
+```{r tidy data}
+data.frame(table(mushroom_new))[,-c(9, 10)]
+```
+
+## The Modeling Process
+
+|   Given the fact that our response variable is a binary outcome, we use logistic regression with a logit link function. In other words, $Poisonous \sim Bernoulli(p_i)$ where $logit(p_i)=\eta_i$ where $\eta_i$ is the following linear component:
+
+$$\eta_i = \beta_0+\beta_1I_{Odor_i}+\beta_2I_{Smooth_i}+\beta_3I_{Bruises_i}+\beta_4I_{Clustered_i}+\beta_5I_{Grass_i}+\beta_6I_{Woods_i}.$$
+
+|   We begin with a null model, $logit(p_i)=\beta_0.$ The summary for this model is shown below.
+
+<br/>
+
+
+```{r tidynullfull, echo=FALSE}
+glm0 <- glm(Poisonous ~ 1, data=mushrooms, family = binomial(link="logit")) 
+glance(glm0)[-c(2,7,8)] 
+tidy(glm0)
+```
+
+<br/>
+
+
+|       Next, we fit the full model, with all of the predictors included. From there, we use the `step` function in order to "weed out" unnecessary variables in order to head toward the most optimal model.
+
+<br/>
+
+
+```{r fullmodel, echo=FALSE}
+glmfull <- glm(Poisonous ~ Colorful + Odor + Smooth + Bruises + Clustered + Grass + Woods, data=mushrooms, family = binomial(link="logit")) 
+stats::step(glmfull, direction = "both")
+```
+
+<br/>
+
+
+|       From the code above, we are able to see that the model with the lowest AIC is when `Colorful` is removed from the full model. After doing so, we gather the specifications of this model, which are shown below (note that null deviance from this data frame matches the deviance from our null model--as it should!)
+
+<br/>
+
+
+```{r tidymodel, echo=FALSE, fig.align='center'}
+glm2 <- glm(Poisonous ~ Odor + Smooth + Bruises + Clustered + Grass + Woods, data=mushrooms, family = binomial(link="logit")) 
+cbind(tidy(glm2)[1], round(tidy(glm2)[2:5],2))
+hist(residuals(glm2, type="deviance"), main= "Deviance Residuals for Fitted Model", xlab="Deviance Residual")
+```
+
+<br/>
+
+|       Based on the histogram of the residual deviance from the model, we are able to conclude that this model does a relatively nice job predicting the edibility outcome.
+
+### Conclusion: Inference and Predictions
+
+|       Based on the estimates shown above, our final model is shown below:
+
+$$
+logit(p_i) = -1.97+6.24I_{Odor_i}-0.4I_{Smooth_i}-3.2 I_{Bruises}+0.81I_{Clustered_i}-1.49I_{Grass_i}-0.64I_{Woods_i}=\eta_i, 
+$$
+
+$$
+\implies 
+p_i = \frac{e^{\eta_i}}{1+e^{\eta_i}}.
+$$
+
+|       It appears that the factors that have the most weight in determining whether a mushroom is poisonous is whether or not the mushroom has an odor--if so, thus increasing the odds ratio that the mushroom is poisonous by a factor of $e^{6.24}$--and whether or not the mushroom has bruises--if not thus decreasing the odds ratio by a factor of $\frac{1}{e^{3.20}}$. We can also conclude that whether or not a mushroom is colorful is not a statistically significant factor in determining whether a mushroom is poisonous.
+
+<br/>
+
+
+|       Below is a preview of the data frame with the computed probabilities of whether or not that given mushroom is poisonous, along with the actual class of the mushroom. Overall, we are able to see that the model does give a relatively high probability for being poisonous when the mushroom *is* actually poisonous. However, there are a few cases--specifically when the mushroom in question has an odor--when the predicted probability is above .5, when the mushroom is actually edible. This arises in the question that perhaps the model gives odor a stronger weight on the mushrooms class than it should.
+
+<br/>
+
+
+```{r}
+predict <- predict(glm2, type = "response")
+Poisonous <- mushroom_new$Poisonous
+cbind(predict, mushroom_new[,-4], Poisonous)[,-2]
+```
+
+<br/>
+
+
+### Further Questions
+
+|       To further this study--and to aid me as my mushroom knowledge grows--I would like to create a slightly more complex model that utilizes some of the other more "technical" variables that we originally disregard. Furthermore, I would like to study the telling qualities of mushrooms that determine whether or not it is psychedelic so I can avoid them in my hunts (or not depending on the day...). Also, given the fact that this model is not perfect, another goal of mine would be to sharpen it in order for it to be more accurate.
+
+<br/>
+
