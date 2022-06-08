@@ -1,0 +1,71 @@
+---
+title: "Probabilistic Clustering"
+author: "Ellie Grace Moore"
+date: '2022-06-08'
+output: 
+  html_document: 
+    highlight: kate
+    theme: cosmo
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center')
+library(mclust)
+library(flexclust)
+```
+
+Since we have the raw data, let's begin with some exploratative data analysis in order to see what the data itself looks like. We will then check the shape of the data against the `stepFlexclust()` function.
+
+```{r, fig.height=4, fig.width=8}
+par(mfrow =  c(1,2))
+hw = read.csv(file = "HW6Q2.csv")
+hist(hw$x)
+plot(stepFlexclust(hw,k=2:8,nrep=20),type="l")
+```
+
+From the above histogram, it appears that the data is bimodal, with slightly varying variances. From the results of the `stepFlexclust()` function, it does appear that the first major "elbow" occurs after we have two groups. We could lean toward three, but I would argue that the histogram best resembles bimodal data. With this being said, we will fit a finite mixture model with two groups, and varying variances. Some plots to gain more insight into the cutoffs are shown below.
+
+
+```{r, fig.height=4, fig.width=8}
+par(mfrow = c(1,2))
+M1 <- Mclust(hw$x, G = 2, "V")
+plot(M1, what = "classification") 
+abline(v=21, lty = 2, lw = 2)
+plot(M1, what = "density") 
+M1$parameters
+```
+
+Based on the code above, we can plug in the corresponding pieces and see that our finite mixture model with cutoffs are:
+
+$$FMM = 0.35 \cdot N(13.18, \sqrt{26.08})+0.65 \cdot N(30.46,\sqrt{31.48}$$
+
+$$\text{Group 1} \leq 21 \leq \text{Group 2}$$
+
+### Multidimensional Example
+
+  We will use a small simulated dataset in order to demonstrate multidimensional finite mixture models. Then, we will compute the probability that the point (2,3) is in cluster 1 versus cluster 2.
+
+```{r, fig.height=7, fig.width=7}
+x <- c(2,2,4,4,5,5)
+y <- c(3,5,6,7,7,8)
+X <- cbind(x,y)
+rownames(X) <- c("A", "B", "C", "D", "E", "F")
+m1=Mclust(X,modelNames=c("VEV"))
+summary(m1)
+par(mfrow=c(2,2))
+plot(m1)
+```
+
+```{r}
+m1$parameters
+mu1 <- matrix(m1$parameters$mean[,1]);mu1
+mu2 <-  matrix(m1$parameters$mean[,2]);mu2
+sigma1 <- matrix(m1$parameters$variance$sigma[,,1], 2, 2)
+sigma2 <- matrix(m1$parameters$variance$sigma[,,2], 2, 2)
+P_G1 <- .333*dmvnorm(t(c(2,3)), mu1, sigma1)
+P_G2 <- .666 *dmvnorm(t(c(2,3)), mu2, sigma2)
+P_G1/(P_G1 + P_G2)
+```
+
+Therefore from the calculations above, we see that $\hat{P}(C_1|x_1)=0.9995$. This is reasonable because if we look at our classification plot above, the point (2,3) is *much* closer to cluster 1 than it is to cluster 2.

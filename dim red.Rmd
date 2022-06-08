@@ -1,0 +1,63 @@
+---
+title: 'Dimension Reduction: Principle Component Analysis'
+author: "Ellie Grace Moore"
+date: '2022-06-08'
+output: 
+  html_document: 
+    highlight: kate
+    theme: cosmo
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center')
+```
+
+### The Data
+
+  We will use a the `baseball.csv` dataset that has the following variables:
+  
+  * **BattingAvg** a player's batting average
+  * **RBI** runs batted in
+  * **ERA** earned run average
+  * **OBP** on base percentage
+
+```{r}
+X <- read.csv(file="baseball.csv", header=T)
+Xs <- scale(X, scale=TRUE);Xs=Xs[,]
+R <- cor(X)
+eigen(R)
+```
+
+```{r}
+PC1 <- Xs %*% eigen(R)$vectors[,1]
+PC2 <- Xs %*% eigen(R)$vectors[,2]
+
+plot(PC1, PC2,type="n",xlab="PC1",ylab="PC2")
+text(PC1,PC2,labels=rownames(X), cex=0.7)
+```
+
+  According to the plot above, the higher-ranked players will have a higher PC1 and PC2 score (which makes sense because the loadings are positive). So players 1 and 4 are good at both batting and running, whereas player 30 was below average in running, and around average at batting. Then there are players such as 23 and 29 who are below average in both.
+
+
+```{r}
+PC <- princomp(X, cor = TRUE) 
+print(loadings(PC), cutoff = 0.4) 
+loadings(PC)[,2] 
+eigen(R)$vectors[,2] 
+```
+
+The first eigenvector tells us that if a player is good at batting, then they will have a higher PC score. The second eigenvector tells us that if a player is good at running, then they will have a higher PC score. 
+
+
+```{r}
+biplot(PC)
+```
+
+  This biplot tells us that there are roughly "two groups" of variables: one for running and one for batting. The first group contains ERA and the second group contains BattingAverage, RBI, and OBP. So if the player is good at batting (and therefore has a higher batting average), then they will likely be on bases more often and bat in more homeruns. If a player is a good runner, then their expected number of runs will be higher. 
+
+```{r}
+screeplot(PC)
+```
+
+It looks like there are two "significant" cutoffs: after the first PC and another after the second. So this means that we could capture significant information using either only the first PC or using both the first and second.

@@ -10,14 +10,12 @@ navbar:
           href: data viz/Visualizing-Distributions.html
         - text: "Missing Data"
           href: data viz/Missing-Data.html
-    - text: "Regression"
+    - text: Supervised Learning
       menu:
-        - text: "Linear"
+        - text: "Linear Regression"
           href: regression/Lab-05 (1).html
-        - text: "General"
+        - text: "Generalized Linear Regression"
           href: regresssion/GLM-project.html
-    - text: Statistical Learning
-      menu:
         - text: "Cross Validation"
           href: stat learning/Cross Validation.html
         - text: "Decision Trees"
@@ -26,6 +24,18 @@ navbar:
           href: stat learning/363 Project.html
         - text: "Random Forest, Boosted Trees, Elastic Net"
           href: Lab-07.html
+    - text: Unsupervised Learning 
+      menu:
+        - text: "Hierarchichal Clustering"
+          href: unsup/Hierarchical-Clustering.html
+        - text: "K-Means Clustering"
+          href: unsup/K-means.html
+        - text: "Probabilistic Clustering"
+          href: unsup/fmm.html
+        - text: "Dimension Reduction"
+          href: dim-red.html
+        - text: "Multidimensional Scaling"
+          href:
     - text: Causal Inference
       menu:
         - text: "Causal Diagrams"

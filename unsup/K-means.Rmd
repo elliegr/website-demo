@@ -1,0 +1,46 @@
+---
+title: "K-Means Clustering"
+author: "Ellie Grace Moore"
+date: '2022-06-08'
+output: 
+  html_document: 
+    highlight: monochrome
+    theme: cosmo
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center')
+library(flexclust)
+```
+
+```{r}
+religion <- read.csv(file="rel.csv")
+rownames(religion)=religion[,2]
+religion <- religion[,3:19]
+head(religion)
+```
+
+  For simplicity, we will select only the major religions. With this being said, we will filter out the original `religion` dataset and keep Christian (non-Catholic), Catholic, Jewish, Muslim, and No Religion. 
+
+``` {r}
+data <- religion[,c(1,2,3,4,5,7,16)]
+head(data)
+```
+
+  Now we will determine how many clusters to use for our k-means clustering. 
+
+``` {r}
+stepFlexclust(data, k = 2:12, nrep = 20)
+plot(stepFlexclust(data, k = 2:12, nrep = 20), type = "l")
+```
+
+  Although there is a level of ambiguity in the `stepFlexclust()` function, but according to the graph it appears that the plot appears to begin to "level out" after 5 clusters. Therefore we will select $k=5$. Now we will find the specific cluster assignments that result in the lowest within cluster distance. Below the cluster assingments (for clusters 1-5) for each country is shown below.
+
+```{r}
+clustrelbest = stepFlexclust(data,k=5,nrep=1000) 
+summary(clustrelbest) 
+
+partition=clusters(clustrelbest)
+partition
+```
